@@ -1,10 +1,32 @@
-name: Hello World
+name: Java Learning
+
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  helloWorld:
+  build-and-lint:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Passo 1 - Checkout
+        uses: actions/checkout@v4
+
+      - name: Passo 2 - Intalar JDK
+        uses: action/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Passo3 - Executar Lint
+        run: mvn checkstyle: check
+
+      - name: Passo3.5 - Build do projeto 
+        run: mvn package - DskipTests
+
+      - name: Passo4 - Upload do Resultado
+        uses: actions/upload-artifact@v4
+        with:
+          name: meu-projeto
+          path: target/
